@@ -10,47 +10,50 @@
 </head>
 
 <?php
-if(ISSET($_POST['addStudent'])) {
-    //turn on error reporting
-    ini_set('display_errors', 1);
-    error_reporting(E_ALL);
 
-    //get config for individual servers
-    $path = $_SERVER['DOCUMENT_ROOT'] . '/../config.php';
-    require_once $path;
+//turn on error reporting
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
-    try {
-        //create object of pdo credentials
-        $dbh = new PDO(DB_DSN, DB_USERNAME, DB_PASSWORD);
-        echo "Connected successfully";
-    } catch (PDOException $e) {
-        echo $e->getMessage();
-    }
+//get config for individual servers
+$path = $_SERVER['DOCUMENT_ROOT'] . '/../config.php';
+require_once $path;
 
-    //PDO
-    $sql = 'INSERT INTO student (sid, last, first, birthdate, gpa, advisor) 
+try {
+    //create object of pdo credentials
+    $dbh = new PDO(DB_DSN, DB_USERNAME, DB_PASSWORD);
+    echo "Connected successfully";
+} catch (PDOException $e) {
+    echo $e->getMessage();
+}
+
+//PDO
+$sql = 'INSERT INTO student (sid, last, first, birthdate, gpa, advisor) 
                 VALUES (:sid, :last, :first, :bday, :gpa, :advisor)';
 
-    //prepare statement
-    $statement = $dbh->prepare($sql);
+//prepare statement
+$statement = $dbh->prepare($sql);
 
-    //bind params
-    $sid = $_POST['sid'];
-    $last = $_POST['last'];
-    $first = $_POST['first'];
-    $bday = $_POST['bday'];
-    $gpa = $_POST['gpa'];
-    $adv = $_POST['adv'];
-    $statement->bindParam(':sid', $sid);
-    $statement->bindParam(':last', $last);
-    $statement->bindParam(':first', $first);
-    $statement->bindParam(':bday', $bday);
-    $statement->bindParam(':gpa', $gpa);
-    $statement->bindParam(':adv', $adv);
+//bind params
+$sid = $_POST['sid'];
+$last = $_POST['last'];
+$first = $_POST['first'];
+$bday = $_POST['bday'];
+$gpa = $_POST['gpa'];
+$adv = $_POST['adv'];
+$statement->bindParam(':sid', $sid);
+$statement->bindParam(':last', $last);
+$statement->bindParam(':first', $first);
+$statement->bindParam(':bday', $bday);
+$statement->bindParam(':gpa', $gpa);
+$statement->bindParam(':advisor', $adv);
 
 
-    //execute
-    $statement->execute();
+//execute
+if ($statement->execute()) {
+    echo "<div class='alert alert-success'>Student added successfully</div>";
+} else {
+    echo "<div class='alert alert-danger'>Error adding student</div>";
 }
 ?>
 
@@ -74,6 +77,5 @@ if(ISSET($_POST['addStudent'])) {
     <label for="adv">Advisor</label>
     <input type="text" id="adv" name="adv">
 
-    <label for="submit">Submit</label>
-    <input type="submit" id="sid" name="submit">
+    <button type="submit" class="btn btn-primary">Submit</button>
 </form>
