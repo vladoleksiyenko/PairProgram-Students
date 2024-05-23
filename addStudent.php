@@ -75,5 +75,5 @@ if(ISSET($_POST['addStudent'])) {
     <input type="text" id="adv" name="adv">
 
     <label for="submit">Submit</label>
-    <input type="text" id="sid" name="submit">
+    <input type="submit" id="sid" name="submit">
 </form>
